@@ -10,11 +10,11 @@ type House =
         seeds : int
    }
 
-type GameBoard = 
-    |  Board of (House*House*House*House*House*House)*
+type GameBoard = {
+    Board : (House*House*House*House*House*House)*
                 (House*House*House*House*House*House)*
                 (House*House)
-    |Turn of StartingPosition
+    Turn : StartingPosition }
 //Each player has six houses and a housebag
 let createHouse num = 
     {number = num; seeds= 4}
@@ -27,12 +27,12 @@ let createPlayerHouses =
     (createHouse 7,createHouse 8,createHouse 9,createHouse 10,createHouse 11,createHouse 12),
     (createHouseBags 13,createHouseBags 14)
 
-let InitializeBoard =
-    Board createPlayerHouses
+let InitializeBoard = 
+    {Board = createPlayerHouses; Turn = StartingPosition.South}
    
 
 let getSeeds n board = 
-   let (Board((h1,h2,h3,h4,h5,h6),(h7,h8,h9,h10,h11,h12),(h13,h14))) = board
+   let ({Board=((h1,h2,h3,h4,h5,h6),(h7,h8,h9,h10,h11,h12),(h13,h14))}) = board
    match n with
     | 1 -> h1.seeds
     | 2 -> h2.seeds
@@ -49,108 +49,110 @@ let getSeeds n board =
     | _ -> -1
    
 let useHouse n board =
-    let (Board((h1,h2,h3,h4,h5,h6),(h7,h8,h9,h10,h11,h12),(h13,h14))) = board
-    match n with 
-    | 1 -> 
+    let ({Board=(h1,h2,h3,h4,h5,h6),(h7,h8,h9,h10,h11,h12),(h13,h14); Turn = z}) = board
+    match n, z=South with 
+    | 1,true -> 
         let a={h1 with seeds=0}
         let b={h2 with seeds=5}
         let c={h3 with seeds=5}
         let d={h4 with seeds=5}
         let e={h5 with seeds=5}
-        Board((a,b,c,d,e,h6),(h7,h8,h9,h10,h11,h12),(h13,h14))
-    | 2 ->
+        {Board=((a,b,c,d,e,h6),(h7,h8,h9,h10,h11,h12),(h13,h14)); Turn = North}
+    | 2,true ->
         let a={h2 with seeds=0}
         let b={h3 with seeds=5}
         let c={h4 with seeds=5}
         let d={h5 with seeds=5}
         let e={h6 with seeds=5}
-        Board((h1,a,b,c,d,e),(h7,h8,h9,h10,h11,h12),(h13,h14))
-    | 3 ->  
+        {Board=((h1,a,b,c,d,e),(h7,h8,h9,h10,h11,h12),(h13,h14)); Turn = North}
+    | 3,true ->  
         let a={h3 with seeds=0}
         let b={h4 with seeds=5}
         let c={h5 with seeds=5}
         let d={h6 with seeds=5}
         let e={h7 with seeds=5}
-        Board((h1,h2,a,b,c,d),(e,h8,h9,h10,h11,h12),(h13,h14))
-    | 4 -> 
+        {Board=((h1,h2,a,b,c,d),(e,h8,h9,h10,h11,h12),(h13,h14)); Turn = North}
+    | 4,true -> 
         let a={h4 with seeds=0}
         let b={h5 with seeds=5}
         let c={h6 with seeds=5}
         let d={h7 with seeds=5}
         let e={h8 with seeds=5}
-        Board((h1,h2,h3,a,b,c),(d,e,h9,h10,h11,h12),(h13,h14))
-    | 5 -> 
+        {Board=((h1,h2,h3,a,b,c),(d,e,h9,h10,h11,h12),(h13,h14)); Turn = North}
+    | 5,true -> 
         let a={h5 with seeds=0}
         let b={h6 with seeds=5}
         let c={h7 with seeds=5}
         let d={h8 with seeds=5}
         let e={h9 with seeds=5}
-        Board((h1,h2,h3,h4,a,b),(c,d,e,h10,h11,h12),(h13,h14))
-    | 6 ->
+        {Board=((h1,h2,h3,h4,a,b),(c,d,e,h10,h11,h12),(h13,h14)); Turn = North}
+    | 6,true ->
         let a={h6 with seeds=0}
         let b={h7 with seeds=5}
         let c={h8 with seeds=5}
         let d={h9 with seeds=5}
         let e={h10 with seeds=5}
-        Board((h1,h2,h3,h4,h5,a),(b,c,d,e,h11,h12),(h13,h14))
-    | 7 ->
+        {Board=((h1,h2,h3,h4,h5,a),(b,c,d,e,h11,h12),(h13,h14)); Turn = North}
+    | 7,false ->
         let a={h7 with seeds=0}
         let b={h8 with seeds=5}
         let c={h9 with seeds=5}
         let d={h10 with seeds=5}
         let e={h11 with seeds=5}
-        Board((h1,h2,h3,h4,h5,h6),(a,b,c,d,e,h12),(h13,h14))
-    | 8 -> 
+        {Board=((h1,h2,h3,h4,h5,h6),(a,b,c,d,e,h12),(h13,h14)); Turn = South}
+    | 8,false -> 
         let a={h8 with seeds=0}
         let b={h9 with seeds=5}
         let c={h10 with seeds=5}
         let d={h11 with seeds=5}
         let e={h12 with seeds=5}
-        Board((h1,h2,h3,h4,h5,h6),(h7,a,b,c,d,e),(h13,h14))
-    | 9 ->
+        {Board=((h1,h2,h3,h4,h5,h6),(h7,a,b,c,d,e),(h13,h14)); Turn = South}
+    | 9,false ->
         let a={h9 with seeds=0}
         let b={h10 with seeds=5}
         let c={h11 with seeds=5}
         let d={h12 with seeds=5}
         let e={h1 with seeds=5}
-        Board((e,h2,h3,h4,h5,h6),(h7,h8,a,b,c,d),(h13,h14))
-    | 10 -> 
+        {Board=((e,h2,h3,h4,h5,h6),(h7,h8,a,b,c,d),(h13,h14)); Turn = South}
+    | 10,false -> 
         let a={h10 with seeds=0}
         let b={h11 with seeds=5}
         let c={h12 with seeds=5}
         let d={h1 with seeds=5}
         let e={h2 with seeds=5}
-        Board((d,e,h3,h4,h5,h6),(h7,h8,h9,a,b,c),(h13,h14))
-    | 11 ->
+        {Board=((d,e,h3,h4,h5,h6),(h7,h8,h9,a,b,c),(h13,h14)); Turn = South}
+    | 11,false ->
         let a={h11 with seeds=0}
         let b={h12 with seeds=5}
         let c={h1 with seeds=5}
         let d={h2 with seeds=5}
         let e={h3 with seeds=5}
-        Board((c,d,e,h4,h5,h6),(h7,h8,h9,h10,a,b),(h13,h14))
-    | 12 ->
+        {Board=((c,d,e,h4,h5,h6),(h7,h8,h9,h10,a,b),(h13,h14)); Turn = South}
+    | 12,false ->
         let a={h12 with seeds=0}
         let b={h1 with seeds=5}
         let c={h2 with seeds=5}
         let d={h3 with seeds=5}
         let e={h4 with seeds=5}
-        Board((b,c,d,e,h5,h6),(h7,h8,h9,h10,h11,a),(h13,h14))
+        {Board=((b,c,d,e,h5,h6),(h7,h8,h9,h10,h11,a),(h13,h14)); Turn = South}
     | _ -> 
-        let a={h12 with seeds= -1}
-        Board((a,a,a,a,a,a),(a,a,a,a,a,a),(a,a))
+        {Board=(h1,h2,h3,h4,h5,h6),(h7,h8,h9,h10,h11,h12),(h13,h14); Turn = z}
 
 
 let start position =
  match position with 
- |South -> InitializeBoard
- |North -> InitializeBoard
+ |South -> {InitializeBoard with Turn = South}
+ |North -> {InitializeBoard with Turn = North}
 
 
 let score board =
-     let (Board((h1,h2,h3,h4,h5,h6),(h7,h8,h9,h10,h11,h12),(h13,h14))) = board
+     let ({Board=((h1,h2,h3,h4,h5,h6),(h7,h8,h9,h10,h11,h12),(h13,h14)); Turn = z}) = board
      (h13,h14)
 
-let gameState board = failwith "Not implemented"
+let gameState board = match board with
+                    | {Turn = North} -> "North's turn"
+                    | {Turn = South} -> "South's turn"
+            
 
 [<EntryPoint>]
 let main _ =

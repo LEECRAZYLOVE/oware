@@ -48,16 +48,39 @@ let getSeeds n board =
     | 12 -> h12.seeds
     | _ -> -1
    
+let addSeed House =
+    {House with seeds = House.seeds+1}
+
+          //let a={h1 with seeds=0}
+                    //let b={h2 with seeds=h2.seeds+1}
+                   //let c={h3 with seeds=h3.seeds+1}
+                    //let d={h4 with seeds=5}
+                    //let e={h5 with seeds=5}
+
 let useHouse n board =
     let ({Board=(h1,h2,h3,h4,h5,h6),(h7,h8,h9,h10,h11,h12),(h13,h14); Turn = z}) = board
     match n, z=South with 
     | 1,true -> 
-        let a={h1 with seeds=0}
-        let b={h2 with seeds=5}
-        let c={h3 with seeds=5}
-        let d={h4 with seeds=5}
-        let e={h5 with seeds=5}
-        {Board=((a,b,c,d,e,h6),(h7,h8,h9,h10,h11,h12),(h13,h14)); Turn = North}
+        let rec honey numSeeds house current =  
+            match numSeeds = 0 with
+                |true -> {Board=(h1,h2,h3,h4,h5,h6),(h7,h8,h9,h10,h11,h12),(h13,h14); Turn = z}
+                |false ->
+                    match house with
+                    |1->  honey (numSeeds-1) (house+1) (addSeed h2) 
+                    |2-> honey (numSeeds-1) (house+1) (addSeed h3)
+                    |3-> honey (numSeeds-1) (house+1) (addSeed h4)
+                    |4-> honey (numSeeds-1) (house+1) (addSeed h5)
+                    |5-> honey (numSeeds-1) (house+1) (addSeed h6)
+                    |6-> honey (numSeeds-1) (house+1) (addSeed h7)
+                    |7-> honey (numSeeds-1) (house+1) (addSeed h8)
+                    |8-> honey (numSeeds-1) (house+1) (addSeed h9)
+                    |9-> honey (numSeeds-1) (house+1) (addSeed h10)
+                    |10-> honey (numSeeds-1) (house+1) (addSeed h11)
+                    |11-> honey (numSeeds-1) (house+1) (addSeed h12)
+                    |12-> honey (numSeeds-1) (house+1) (addSeed h1)                   
+        honey h1.seeds 1 h1
+
+    |_
     | 2,true ->
         let a={h2 with seeds=0}
         let b={h3 with seeds=5}

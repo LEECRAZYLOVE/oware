@@ -41,7 +41,7 @@ let ``When house 1 is used, seeds go to the other houses`` () =
 
 [<Test>]
 let ``When house 2 is used, seeds go to the other houses`` () =
-    let board = start South |> useHouse 2
+    let  board = start South |> useHouse 2
     board |> hasSeedCount (4,0,5,5,5,5,4,4,4,4,4,4)
 
 [<Test>]
